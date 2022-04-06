@@ -1,0 +1,60 @@
+                    List of relations
+ Schema |      Name       | Type  |      Owner       
+--------+-----------------+-------+------------------
+ public | city            | table | williamstribling
+ public | country         | table | williamstribling
+ public | countrylanguage | table | williamstribling
+
+
+                    Table "public.city"
+   Column    |     Type     | Collation | Nullable | Default 
+-------------+--------------+-----------+----------+---------
+ id          | integer      |           | not null | 
+ name        | text         |           | not null | 
+ countrycode | character(3) |           | not null | 
+ district    | text         |           | not null | 
+ population  | integer      |           | not null | 
+Indexes:
+    "city_pkey" PRIMARY KEY, btree (id)
+Referenced by:
+    TABLE "country" CONSTRAINT "country_capital_fkey" FOREIGN KEY (capital) REFERENCES city(id)
+
+                    Table "public.country"
+     Column     |     Type      | Collation | Nullable | Default 
+----------------+---------------+-----------+----------+---------
+ code           | character(3)  |           | not null | 
+ name           | text          |           | not null | 
+ continent      | text          |           | not null | 
+ region         | text          |           | not null | 
+ surfacearea    | real          |           | not null | 
+ indepyear      | smallint      |           |          | 
+ population     | integer       |           | not null | 
+ lifeexpectancy | real          |           |          | 
+ gnp            | numeric(10,2) |           |          | 
+ gnpold         | numeric(10,2) |           |          | 
+ localname      | text          |           | not null | 
+ governmentform | text          |           | not null | 
+ headofstate    | text          |           |          | 
+ capital        | integer       |           |          | 
+ code2          | character(2)  |           | not null | 
+Indexes:
+    "country_pkey" PRIMARY KEY, btree (code)
+Check constraints:
+    "country_continent_check" CHECK (continent = 'Asia'::text OR continent = 'Europe'::text OR continent = 'North America'::text OR continent = 'Africa'::text OR continent = 'Oceania'::text OR continent = 'Antarctica'::text OR continent 
+= 'South America'::text)
+Foreign-key constraints:
+    "country_capital_fkey" FOREIGN KEY (capital) REFERENCES city(id)
+Referenced by:
+    TABLE "countrylanguage" CONSTRAINT "countrylanguage_countrycode_fkey" FOREIGN KEY (countrycode) REFERENCES country(code)
+
+              Table "public.countrylanguage"
+   Column    |     Type     | Collation | Nullable | Default 
+-------------+--------------+-----------+----------+---------
+ countrycode | character(3) |           | not null | 
+ language    | text         |           | not null | 
+ isofficial  | boolean      |           | not null | 
+ percentage  | real         |           | not null | 
+Indexes:
+    "countrylanguage_pkey" PRIMARY KEY, btree (countrycode, language)
+Foreign-key constraints:
+    "countrylanguage_countrycode_fkey" FOREIGN KEY (countrycode) REFERENCES country(code)
